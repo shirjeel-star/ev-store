@@ -1,0 +1,72 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: voltstore_postgres
+    environment:
+      POSTGRES_USER: voltstore
+      POSTGRES_PASSWORD: voltstore_secret
+      POSTGRES_DB: voltstore
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U voltstore"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: voltstore_redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: voltstore_backend
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql://voltstore:voltstore_secret@postgres:5432/voltstore
+      REDIS_URL: redis://redis:6379
+      JWT_SECRET: your_jwt_secret_change_in_prod
+      JWT_REFRESH_SECRET: your_jwt_refresh_secret_change_in_prod
+      NODE_ENV: production
+      PORT: 4000
+    ports:
+      - "4000:4000"
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: voltstore_frontend
+    depends_on:
+      - backend
+    environment:
+      NEXT_PUBLIC_API_URL: http://backend:4000/api
+      NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: pk_test_your_key
+    ports:
+      - "3000:3000"
+
+volumes:
+  postgres_data:
+  redis_data:
