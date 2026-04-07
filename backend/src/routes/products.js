@@ -205,7 +205,7 @@ router.get('/categories/all', async (req, res, next) => {
       where: { isActive: true },
       orderBy: { sortOrder: 'asc' },
     });
-    res.json({ success: true, data: categories });
+    res.json({ success: true, categories });
   } catch (err) {
     next(err);
   }

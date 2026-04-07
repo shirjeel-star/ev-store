@@ -17,7 +17,7 @@ router.get('/', async (req, res, next) => {
       }),
       prisma.review.count({ where: { productId, status: 'APPROVED' } }),
     ]);
-    res.json({ success: true, data: reviews, pagination: { page: parseInt(page), limit: parseInt(limit), total } });
+    res.json({ success: true, reviews, total, totalPages: Math.ceil(total / parseInt(limit)) });
   } catch (err) { next(err); }
 });
 

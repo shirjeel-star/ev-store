@@ -108,7 +108,7 @@ router.get('/referrals', authenticate, requirePartner, async (req, res, next) =>
       prisma.referral.count({ where: { partnerId: partner.id } }),
     ]);
 
-    res.json({ success: true, data: referrals, pagination: { page: parseInt(page), limit: parseInt(limit), total } });
+    res.json({ success: true, referrals, total, totalPages: Math.ceil(total / parseInt(limit)) });
   } catch (err) {
     next(err);
   }

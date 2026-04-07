@@ -24,46 +24,79 @@ function Hero() {
         }}
       />
 
-      <div className="relative container-custom py-24 md:py-36">
-        <div className="max-w-3xl mx-auto text-center">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-brand-600/20 border border-brand-500/30 text-brand-400 text-sm font-medium mb-6">
-            <Zap className="w-3.5 h-3.5" />
-            Premium EV Charging Equipment
-          </div>
-          <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-white leading-tight tracking-tight">
-            Power Your Drive.{' '}
-            <span className="text-brand-400">Anywhere.</span>
-          </h1>
-          <p className="mt-6 text-lg md:text-xl text-dark-300 leading-relaxed max-w-2xl mx-auto">
-            From Level 2 home chargers to intelligent NEMA splitters — VoltStore has everything you need to charge smarter, faster, and more affordably.
-          </p>
-          <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/shop" className="btn-primary text-base px-8 py-4">
-              Shop All Products <ArrowRight className="w-5 h-5 ml-1" />
-            </Link>
-            <Link href="/shop?category=nema-splitters" className="btn-secondary text-base px-8 py-4 bg-white/10 text-white border-white/20 hover:bg-white/20">
-              See NEMA Splitters
-            </Link>
-          </div>
-          {/* Social proof */}
-          <div className="mt-12 flex flex-col sm:flex-row items-center justify-center gap-6 text-sm text-dark-400">
-            <div className="flex items-center gap-1.5">
-              <div className="flex">
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                ))}
+      <div className="relative container-custom py-20 md:py-28">
+        <div className="grid lg:grid-cols-2 gap-12 items-center">
+          {/* Left: copy */}
+          <div>
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-brand-600/20 border border-brand-500/30 text-brand-400 text-sm font-medium mb-6">
+              <Zap className="w-3.5 h-3.5" />
+              Premium EV Charging Equipment
+            </div>
+            <h1 className="text-4xl md:text-6xl font-bold text-white leading-tight tracking-tight">
+              Power Your Drive.{' '}
+              <span className="text-brand-400">Anywhere.</span>
+            </h1>
+            <p className="mt-6 text-lg text-dark-300 leading-relaxed">
+              From Level 2 home chargers to intelligent NEMA splitters — VoltStore has everything you need to charge smarter, faster, and more affordably.
+            </p>
+            <div className="mt-8 flex flex-col sm:flex-row gap-4">
+              <Link href="/shop" className="btn-primary text-base px-8 py-4">
+                Shop All Products <ArrowRight className="w-5 h-5 ml-1" />
+              </Link>
+              <Link href="/shop?category=nema-splitters" className="btn-secondary text-base px-8 py-4 bg-white/10 text-white border-white/20 hover:bg-white/20">
+                See NEMA Splitters
+              </Link>
+            </div>
+            {/* Social proof */}
+            <div className="mt-10 flex flex-wrap gap-5 text-sm text-dark-400">
+              <div className="flex items-center gap-1.5">
+                <div className="flex">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+                  ))}
+                </div>
+                <span>4.9/5 · 1,200+ reviews</span>
               </div>
-              <span>4.9/5 from 1,200+ reviews</span>
+              <div className="flex items-center gap-1.5">
+                <ShieldCheck className="w-4 h-4 text-brand-500" />
+                <span>ETL certified · 2-yr warranty</span>
+              </div>
+              <div className="flex items-center gap-1.5">
+                <Truck className="w-4 h-4 text-brand-500" />
+                <span>Free shipping over $150</span>
+              </div>
             </div>
-            <span className="hidden sm:block text-dark-700">·</span>
-            <div className="flex items-center gap-1.5">
-              <ShieldCheck className="w-4 h-4 text-brand-500" />
-              <span>ETL certified · 2-year warranty</span>
-            </div>
-            <span className="hidden sm:block text-dark-700">·</span>
-            <div className="flex items-center gap-1.5">
-              <Truck className="w-4 h-4 text-brand-500" />
-              <span>Free shipping over $150</span>
+          </div>
+          {/* Right: product showcase */}
+          <div className="relative flex justify-center lg:justify-end">
+            <div className="relative w-full max-w-md">
+              {/* glow */}
+              <div className="absolute inset-0 bg-brand-500/20 rounded-3xl blur-3xl scale-90" />
+              <div className="relative bg-white/5 border border-white/10 rounded-3xl p-6 backdrop-blur-sm">
+                <Image
+                  src="/images/products/nema-splitter-30a.png"
+                  alt="PulseQ NEMA Splitter — charge two EVs from one outlet"
+                  width={480}
+                  height={480}
+                  className="w-full h-auto object-contain drop-shadow-2xl"
+                  priority
+                />
+                {/* product badge */}
+                <div className="absolute top-4 right-4 bg-brand-500 text-white text-xs font-bold px-3 py-1.5 rounded-full">
+                  Bestseller
+                </div>
+                {/* mini stat cards */}
+                <div className="mt-4 grid grid-cols-2 gap-3">
+                  <div className="bg-white/10 rounded-xl px-4 py-3 text-center">
+                    <p className="text-white font-bold text-lg">2 EVs</p>
+                    <p className="text-dark-400 text-xs">One outlet</p>
+                  </div>
+                  <div className="bg-white/10 rounded-xl px-4 py-3 text-center">
+                    <p className="text-white font-bold text-lg">30–50A</p>
+                    <p className="text-dark-400 text-xs">Max amperage</p>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>

@@ -70,7 +70,7 @@ async function main() {
         name: 'NEMA Splitters',
         slug: 'nema-splitters',
         description: 'Smart 240V splitters that let you share a single outlet between your EV charger and other appliances.',
-        imageUrl: 'https://www.topdon.us/cdn/shop/products/PulseQ-NEMA-Splitter-30A-1000.png',
+        imageUrl: '/images/products/nema-splitter-30a.png',
         sortOrder: 1,
       },
     }),
@@ -79,7 +79,7 @@ async function main() {
         name: 'EV Chargers',
         slug: 'ev-chargers',
         description: 'Level 2 home and portable EV chargers for every Electric Vehicle.',
-        imageUrl: 'https://www.topdon.us/cdn/shop/files/PulseQACLite-1.jpg',
+        imageUrl: '/images/products/ac-lite-2.jpg',
         sortOrder: 2,
       },
     }),
@@ -158,10 +158,10 @@ No panel upgrades. No electricians. Just plug and charge.
   // Add images for NEMA 30A
   await prisma.productImage.createMany({
     data: [
-      { productId: nema30.id, url: 'https://www.topdon.us/cdn/shop/products/PulseQ-NEMA-Splitter-30A-1000.png', altText: 'PulseQ NEMA Splitter 30A — Front View', position: 0, isPrimary: true },
-      { productId: nema30.id, url: 'https://www.topdon.us/cdn/shop/files/01.jpg', altText: 'PulseQ NEMA Splitter 30A — Side View', position: 1 },
-      { productId: nema30.id, url: 'https://www.topdon.us/cdn/shop/files/02-_1_2.jpg', altText: 'PulseQ NEMA Splitter 30A — Installed', position: 2 },
-      { productId: nema30.id, url: 'https://www.topdon.us/cdn/shop/files/03.jpg', altText: 'PulseQ NEMA Splitter 30A — Use Case', position: 3 },
+      { productId: nema30.id, url: '/images/products/nema-splitter-30a.png', altText: 'PulseQ NEMA Splitter 30A — Front View', position: 0, isPrimary: true },
+      { productId: nema30.id, url: '/images/products/01.jpg', altText: 'PulseQ NEMA Splitter 30A — Side View', position: 1 },
+      { productId: nema30.id, url: '/images/products/02.jpg', altText: 'PulseQ NEMA Splitter 30A — Installed', position: 2 },
+      { productId: nema30.id, url: '/images/products/03.jpg', altText: 'PulseQ NEMA Splitter 30A — Use Case', position: 3 },
     ],
   });
 
@@ -230,8 +230,8 @@ The industry's most powerful smart splitter — built for serious EV households.
 
   await prisma.productImage.createMany({
     data: [
-      { productId: nema50.id, url: 'https://www.topdon.us/cdn/shop/files/04.jpg', altText: 'PulseQ NEMA Splitter 50A — Front View', position: 0, isPrimary: true },
-      { productId: nema50.id, url: 'https://www.topdon.us/cdn/shop/files/05.jpg', altText: 'PulseQ NEMA Splitter 50A — In Use', position: 1 },
+      { productId: nema50.id, url: '/images/products/04.jpg', altText: 'PulseQ NEMA Splitter 50A — Front View', position: 0, isPrimary: true },
+      { productId: nema50.id, url: '/images/products/05.jpg', altText: 'PulseQ NEMA Splitter 50A — In Use', position: 1 },
     ],
   });
 
@@ -294,8 +294,8 @@ Compatible with ALL NACS/SAE J3400 native Tesla vehicles (Model S, 3, X, Y, Cybe
 
   await prisma.productImage.createMany({
     data: [
-      { productId: acLite48.id, url: 'https://www.topdon.us/cdn/shop/files/topdon-pulseq-ac-lite-48a-level-2-ev-charger-front-view.jpg', altText: 'PulseQ AC Lite 48A NACS Tesla Charger', position: 0, isPrimary: true },
-      { productId: acLite48.id, url: 'https://www.topdon.us/cdn/shop/files/PulseQACLite-1.jpg', altText: 'PulseQ AC Lite 48A — Side Profile', position: 1 },
+      { productId: acLite48.id, url: '/images/products/ac-lite-front.jpg', altText: 'PulseQ AC Lite 48A NACS Tesla Charger', position: 0, isPrimary: true },
+      { productId: acLite48.id, url: '/images/products/ac-lite-2.jpg', altText: 'PulseQ AC Lite 48A — Side Profile', position: 1 },
     ],
   });
 
@@ -355,7 +355,7 @@ Compatible with ALL NACS/SAE J3400 native Tesla vehicles (Model S, 3, X, Y, Cybe
 
   await prisma.productImage.createMany({
     data: [
-      { productId: acLite40.id, url: 'https://www.topdon.us/cdn/shop/files/PulseQACLite-1.jpg', altText: 'PulseQ AC Lite 40A — Front View', position: 0, isPrimary: true },
+      { productId: acLite40.id, url: '/images/products/ac-lite-2.jpg', altText: 'PulseQ AC Lite 40A — Front View', position: 0, isPrimary: true },
     ],
   });
 
@@ -411,7 +411,7 @@ Compatible with ALL NACS/SAE J3400 native Tesla vehicles (Model S, 3, X, Y, Cybe
 
   await prisma.productImage.createMany({
     data: [
-      { productId: acHome.id, url: 'https://www.topdon.us/cdn/shop/products/PulseQACHome.png', altText: 'PulseQ AC Home 40A', position: 0, isPrimary: true },
+      { productId: acHome.id, url: '/images/products/ac-home.png', altText: 'PulseQ AC Home 40A', position: 0, isPrimary: true },
     ],
   });
 
@@ -464,7 +464,7 @@ Compatible with ALL NACS/SAE J3400 native Tesla vehicles (Model S, 3, X, Y, Cybe
 
   await prisma.productImage.createMany({
     data: [
-      { productId: portable.id, url: 'https://www.topdon.us/cdn/shop/files/PulseQACPortable_3.7K_C7_US-1_2.jpg', altText: 'PulseQ AC Portable EV Charger', position: 0, isPrimary: true },
+      { productId: portable.id, url: '/images/products/ac-portable.jpg', altText: 'PulseQ AC Portable EV Charger', position: 0, isPrimary: true },
     ],
   });
 

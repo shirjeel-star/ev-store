@@ -28,7 +28,7 @@ const useCartStore = create(
       fetchCart: async () => {
         try {
           const { data } = await cartApi.get();
-          const items = data.items.map((i) => ({
+          const items = (data.cart?.items || []).map((i) => ({
             id: i.id,
             variantId: i.variantId,
             productId: i.variant.product.id,
@@ -37,7 +37,7 @@ const useCartStore = create(
             price: parseFloat(i.variant.price),
             quantity: i.quantity,
             sku: i.variant.sku,
-            stock: i.variant.stock,
+            stock: i.variant.inventory,
             variant: i.variant.name,
           }));
           set({ items, synced: true });
@@ -53,7 +53,7 @@ const useCartStore = create(
           const token = typeof window !== 'undefined' ? localStorage.getItem('access_token') : null;
           if (token) {
             const { data } = await cartApi.add({ variantId, quantity });
-            const items = data.items.map((i) => ({
+            const items = (data.cart?.items || []).map((i) => ({
               id: i.id,
               variantId: i.variantId,
               productId: i.variant.product.id,
@@ -62,7 +62,7 @@ const useCartStore = create(
               price: parseFloat(i.variant.price),
               quantity: i.quantity,
               sku: i.variant.sku,
-              stock: i.variant.stock,
+              stock: i.variant.inventory,
               variant: i.variant.name,
             }));
             set({ items });
@@ -85,7 +85,7 @@ const useCartStore = create(
         const token = typeof window !== 'undefined' ? localStorage.getItem('access_token') : null;
         if (token) {
           const { data } = await cartApi.update(itemId, quantity);
-          const items = data.items.map((i) => ({
+          const items = (data.cart?.items || []).map((i) => ({
             id: i.id,
             variantId: i.variantId,
             productId: i.variant.product.id,
@@ -94,7 +94,7 @@ const useCartStore = create(
             price: parseFloat(i.variant.price),
             quantity: i.quantity,
             sku: i.variant.sku,
-            stock: i.variant.stock,
+            stock: i.variant.inventory,
             variant: i.variant.name,
           }));
           set({ items });
