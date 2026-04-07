@@ -36,10 +36,16 @@ export default function ProductDetailPage() {
   const variants = product?.variants || [];
   const selectedVariant = variants.find((v) => v.id === selectedVariantId) || variants[0];
   const images = product?.images || [];
+  // When a variant has its own imageUrl, find its index in images array for gallery highlight
+  const variantImageIndex = selectedVariant?.imageUrl
+    ? images.findIndex((img) => img.url === selectedVariant.imageUrl)
+    : -1;
+  // Auto-switch to variant image when variant changes
+  const displayImageIndex = variantImageIndex >= 0 ? variantImageIndex : activeImage;
   const price = parseFloat(selectedVariant?.price || 0);
-  const comparePrice = parseFloat(selectedVariant?.comparePrice || 0);
+  const comparePrice = parseFloat(selectedVariant?.comparePrice || selectedVariant?.compareAtPrice || 0);
   const salePercent = comparePrice > price ? Math.round(((comparePrice - price) / comparePrice) * 100) : 0;
-  const inStock = (selectedVariant?.stock || 0) > 0;
+  const inStock = (selectedVariant?.stock ?? selectedVariant?.inventory ?? 0) > 0;
 
   const handleAddToCart = async () => {
     if (!selectedVariant || !inStock) return;
@@ -52,6 +58,16 @@ export default function ProductDetailPage() {
       toast.error('Failed to add to cart');
     } finally {
       setAdding(false);
+    }
+  };
+
+  // Switch to variant image when selecting a new variant
+  const handleVariantSelect = (variantId) => {
+    setSelectedVariantId(variantId);
+    const v = variants.find((x) => x.id === variantId);
+    if (v?.imageUrl) {
+      const idx = images.findIndex((img) => img.url === v.imageUrl);
+      if (idx >= 0) setActiveImage(idx);
     }
   };
 
@@ -81,7 +97,7 @@ export default function ProductDetailPage() {
     );
   }
 
-  const specs = product.specs || {};
+  const specs = product.specs || product.specifications || {};
   const features = product.features || [];
 
   return (
@@ -113,7 +129,7 @@ export default function ProductDetailPage() {
           <div className="space-y-3">
             <div className="relative aspect-square rounded-2xl overflow-hidden bg-dark-50 border border-dark-100">
               <Image
-                src={images[activeImage]?.url || '/placeholder.jpg'}
+                src={images[displayImageIndex]?.url || '/placeholder.jpg'}
                 alt={product.name}
                 fill
                 className="object-cover"
@@ -189,7 +205,7 @@ export default function ProductDetailPage() {
                   {variants.map((v) => (
                     <button
                       key={v.id}
-                      onClick={() => setSelectedVariantId(v.id)}
+                      onClick={() => handleVariantSelect(v.id)}
                       disabled={v.stock === 0}
                       className={clsx(
                         'px-4 py-2 rounded-xl text-sm font-medium border-2 transition-all',
@@ -223,7 +239,7 @@ export default function ProductDetailPage() {
                   </button>
                   <span className="w-10 text-center font-semibold text-dark-900">{quantity}</span>
                   <button
-                    onClick={() => setQuantity(Math.min(selectedVariant?.stock || 10, quantity + 1))}
+                    onClick={() => setQuantity(Math.min(selectedVariant?.stock ?? selectedVariant?.inventory ?? 10, quantity + 1))}
                     className="w-10 h-10 flex items-center justify-center text-dark-500 hover:text-dark-900 disabled:opacity-30"
                     disabled={quantity >= (selectedVariant?.stock || 10)}
                   >

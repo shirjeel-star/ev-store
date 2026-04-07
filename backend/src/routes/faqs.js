@@ -7,7 +7,7 @@ router.get('/', async (req, res, next) => {
     const where = { isActive: true };
     if (category) where.category = category;
     const faqs = await prisma.fAQ.findMany({ where, orderBy: { sortOrder: 'asc' } });
-    res.json({ success: true, data: faqs });
+    res.json({ success: true, faqs });
   } catch (err) { next(err); }
 });
 

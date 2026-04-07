@@ -161,7 +161,7 @@ router.get('/', authenticate, requireAdmin, async (req, res, next) => {
       prisma.partner.count({ where }),
     ]);
 
-    res.json({ success: true, data: partners, pagination: { page: parseInt(page), limit: parseInt(limit), total } });
+    res.json({ success: true, partners, total });
   } catch (err) {
     next(err);
   }

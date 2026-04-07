@@ -41,6 +41,17 @@ router.patch('/password', authenticate, async (req, res, next) => {
   } catch (err) { next(err); }
 });
 
+// GET /api/users/addresses
+router.get('/addresses', authenticate, async (req, res, next) => {
+  try {
+    const addresses = await prisma.address.findMany({
+      where: { userId: req.user.id },
+      orderBy: { isDefault: 'desc' },
+    });
+    res.json({ success: true, addresses });
+  } catch (err) { next(err); }
+});
+
 // Addresses
 router.post('/addresses', authenticate, async (req, res, next) => {
   try {

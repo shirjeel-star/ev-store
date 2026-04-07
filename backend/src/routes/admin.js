@@ -124,7 +124,7 @@ router.get('/products', async (req, res, next) => {
       prisma.product.count({ where }),
     ]);
 
-    res.json({ success: true, data: products, pagination: { page: parseInt(page), limit: parseInt(limit), total } });
+    res.json({ success: true, products, total, pages: Math.ceil(total / parseInt(limit)) });
   } catch (err) {
     next(err);
   }
@@ -242,7 +242,7 @@ router.get('/orders', async (req, res, next) => {
       prisma.order.count({ where }),
     ]);
 
-    res.json({ success: true, data: orders, pagination: { page: parseInt(page), limit: parseInt(limit), total } });
+    res.json({ success: true, orders, total });
   } catch (err) {
     next(err);
   }
@@ -348,7 +348,7 @@ router.get('/customers', async (req, res, next) => {
       prisma.user.count({ where }),
     ]);
 
-    res.json({ success: true, data: users, pagination: { page: parseInt(page), limit: parseInt(limit), total } });
+    res.json({ success: true, customers: users, total });
   } catch (err) {
     next(err);
   }
@@ -396,7 +396,7 @@ router.get('/reviews', async (req, res, next) => {
       prisma.review.count({ where }),
     ]);
 
-    res.json({ success: true, data: reviews, pagination: { page: parseInt(page), limit: parseInt(limit), total } });
+    res.json({ success: true, reviews, total });
   } catch (err) {
     next(err);
   }
@@ -430,7 +430,7 @@ router.delete('/reviews/:id', async (req, res, next) => {
 router.get('/blog', async (req, res, next) => {
   try {
     const posts = await prisma.blogPost.findMany({ orderBy: { createdAt: 'desc' } });
-    res.json({ success: true, data: posts });
+    res.json({ success: true, posts, total: posts.length });
   } catch (err) {
     next(err);
   }
@@ -471,7 +471,7 @@ router.delete('/blog/:id', async (req, res, next) => {
 router.get('/faqs', async (req, res, next) => {
   try {
     const faqs = await prisma.fAQ.findMany({ orderBy: { sortOrder: 'asc' } });
-    res.json({ success: true, data: faqs });
+    res.json({ success: true, faqs });
   } catch (err) { next(err); }
 });
 
@@ -502,7 +502,7 @@ router.delete('/faqs/:id', async (req, res, next) => {
 router.get('/discounts', async (req, res, next) => {
   try {
     const discounts = await prisma.discount.findMany({ orderBy: { createdAt: 'desc' } });
-    res.json({ success: true, data: discounts });
+    res.json({ success: true, discounts });
   } catch (err) { next(err); }
 });
 
@@ -535,7 +535,7 @@ router.delete('/discounts/:id', async (req, res, next) => {
 router.get('/categories', async (req, res, next) => {
   try {
     const cats = await prisma.category.findMany({ orderBy: { sortOrder: 'asc' } });
-    res.json({ success: true, data: cats });
+    res.json({ success: true, categories: cats });
   } catch (err) { next(err); }
 });
 
@@ -575,7 +575,7 @@ router.get('/settings', async (req, res, next) => {
   try {
     const settings = await prisma.setting.findMany();
     const map = Object.fromEntries(settings.map((s) => [s.key, s.value]));
-    res.json({ success: true, data: map });
+    res.json({ success: true, settings: map });
   } catch (err) { next(err); }
 });
 

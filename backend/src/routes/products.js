@@ -60,21 +60,27 @@ router.get('/', optionalAuth, async (req, res, next) => {
     });
     const ratingMap = Object.fromEntries(ratings.map((r) => [r.productId, r._avg.rating]));
 
-    const enriched = products.map((p) => ({
+    const normalizedProducts = products.map((p) => ({
       ...p,
-      averageRating: ratingMap[p.id] || 0,
+      price: p.basePrice,
+      comparePrice: p.compareAtPrice,
+      specs: p.specifications,
+      avgRating: ratingMap[p.id] || 0,
       reviewCount: p._count.reviews,
+      variants: (p.variants || []).map((v) => ({
+        ...v,
+        stock: v.inventory,
+        comparePrice: v.compareAtPrice,
+      })),
     }));
 
+    const lim = parseInt(limit);
     res.json({
       success: true,
-      data: enriched,
-      pagination: {
-        page: parseInt(page),
-        limit: parseInt(limit),
-        total,
-        pages: Math.ceil(total / parseInt(limit)),
-      },
+      products: normalizedProducts,
+      total,
+      totalPages: Math.ceil(total / lim),
+      page: parseInt(page),
     });
   } catch (err) {
     next(err);
@@ -109,14 +115,21 @@ router.get('/:slug', optionalAuth, async (req, res, next) => {
       _count: { rating: true },
     });
 
-    res.json({
-      success: true,
-      data: {
-        ...product,
-        averageRating: ratingData._avg.rating || 0,
-        reviewCount: ratingData._count.rating,
-      },
-    });
+    const normalized = {
+      ...product,
+      price: product.basePrice,
+      comparePrice: product.compareAtPrice,
+      specs: product.specifications,
+      avgRating: ratingData._avg.rating || 0,
+      reviewCount: ratingData._count.rating,
+      variants: (product.variants || []).map((v) => ({
+        ...v,
+        stock: v.inventory,
+        comparePrice: v.compareAtPrice,
+      })),
+    };
+
+    res.json({ success: true, product: normalized });
   } catch (err) {
     next(err);
   }

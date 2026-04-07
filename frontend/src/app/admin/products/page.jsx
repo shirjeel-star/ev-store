@@ -11,27 +11,43 @@ import { Plus, Pencil, Trash2, X } from 'lucide-react';
 
 const schema = z.object({
   name: z.string().min(2),
-  slug: z.string().min(2),
   description: z.string().optional(),
-  price: z.number({ coercion: true }).positive(),
-  compareAtPrice: z.number({ coercion: true }).optional(),
-  stock: z.number({ coercion: true }).int().nonnegative(),
-  category: z.string().min(1),
-  sku: z.string().min(1),
-  featured: z.boolean().optional(),
+  shortDescription: z.string().optional(),
+  basePrice: z.number({ coercion: true }).positive(),
+  compareAtPrice: z.number({ coercion: true }).optional().nullable(),
+  categoryId: z.string().min(1, 'Category is required'),
+  isFeatured: z.boolean().optional(),
+  isActive: z.boolean().optional(),
 });
 
 function ProductModal({ product, onClose }) {
   const qc = useQueryClient();
   const isEdit = !!product?.id;
 
+  const { data: catData } = useQuery({
+    queryKey: ['admin-categories'],
+    queryFn: () => adminApi.categories(),
+  });
+  const categories = catData?.data?.categories || [];
+
   const { register, handleSubmit, formState: { errors } } = useForm({
     resolver: zodResolver(schema),
-    defaultValues: product || { featured: false },
+    defaultValues: isEdit ? {
+      name: product.name,
+      description: product.description || '',
+      shortDescription: product.shortDescription || '',
+      basePrice: product.basePrice,
+      compareAtPrice: product.compareAtPrice || null,
+      categoryId: product.category?.id || product.categoryId || '',
+      isFeatured: product.isFeatured || false,
+      isActive: product.isActive !== false,
+    } : { isFeatured: false, isActive: true },
   });
 
   const mutation = useMutation({
-    mutationFn: (data) => isEdit ? adminApi.updateProduct(product.id, data) : adminApi.createProduct(data),
+    mutationFn: (data) => isEdit
+      ? adminApi.updateProduct(product.id, data)
+      : adminApi.createProduct(data),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['admin-products'] });
       toast.success(isEdit ? 'Product updated' : 'Product created');
@@ -51,50 +67,45 @@ function ProductModal({ product, onClose }) {
           <div className="grid grid-cols-2 gap-4">
             <div className="col-span-2">
               <label className="label">Product Name</label>
-              <input {...register('name')} className="input" />
+              <input {...register('name')} className="input" placeholder="e.g. PulseQ NEMA Splitter 30A" />
               {errors.name && <p className="input-error">{errors.name.message}</p>}
             </div>
             <div>
-              <label className="label">Slug</label>
-              <input {...register('slug')} className="input" />
-              {errors.slug && <p className="input-error">{errors.slug.message}</p>}
-            </div>
-            <div>
-              <label className="label">SKU</label>
-              <input {...register('sku')} className="input" />
-              {errors.sku && <p className="input-error">{errors.sku.message}</p>}
-            </div>
-            <div>
               <label className="label">Price ($)</label>
-              <input type="number" step="0.01" {...register('price')} className="input" />
-              {errors.price && <p className="input-error">{errors.price.message}</p>}
+              <input type="number" step="0.01" {...register('basePrice')} className="input" />
+              {errors.basePrice && <p className="input-error">{errors.basePrice.message}</p>}
             </div>
             <div>
               <label className="label">Compare Price ($)</label>
               <input type="number" step="0.01" {...register('compareAtPrice')} className="input" />
             </div>
-            <div>
-              <label className="label">Stock</label>
-              <input type="number" {...register('stock')} className="input" />
-              {errors.stock && <p className="input-error">{errors.stock.message}</p>}
-            </div>
-            <div>
+            <div className="col-span-2">
               <label className="label">Category</label>
-              <select {...register('category')} className="input">
+              <select {...register('categoryId')} className="input">
                 <option value="">Select…</option>
-                <option value="ev-chargers">EV Chargers</option>
-                <option value="nema-splitters">NEMA Splitters</option>
-                <option value="accessories">Accessories</option>
+                {categories.map((c) => (
+                  <option key={c.id} value={c.id}>{c.name}</option>
+                ))}
               </select>
-              {errors.category && <p className="input-error">{errors.category.message}</p>}
+              {errors.categoryId && <p className="input-error">{errors.categoryId.message}</p>}
+            </div>
+            <div className="col-span-2">
+              <label className="label">Short Description</label>
+              <input {...register('shortDescription')} className="input" />
             </div>
             <div className="col-span-2">
               <label className="label">Description</label>
-              <textarea {...register('description')} rows={3} className="input resize-none" />
+              <textarea {...register('description')} rows={4} className="input resize-none" />
             </div>
-            <div className="col-span-2 flex items-center gap-2">
-              <input type="checkbox" id="featured" {...register('featured')} className="w-4 h-4 text-brand-600 rounded" />
-              <label htmlFor="featured" className="text-sm text-dark-700">Featured product</label>
+            <div className="col-span-2 flex items-center gap-4">
+              <label className="flex items-center gap-2 text-sm text-dark-700">
+                <input type="checkbox" {...register('isFeatured')} className="w-4 h-4 text-brand-600 rounded" />
+                Featured product
+              </label>
+              <label className="flex items-center gap-2 text-sm text-dark-700">
+                <input type="checkbox" {...register('isActive')} className="w-4 h-4 text-brand-600 rounded" />
+                Active (visible in store)
+              </label>
             </div>
           </div>
           <div className="flex gap-3 pt-2">
@@ -156,10 +167,13 @@ export default function AdminProductsPage() {
                   <tr key={p.id} className="hover:bg-dark-50/50">
                     <td className="px-4 py-3 font-medium text-dark-900 max-w-xs truncate">{p.name}</td>
                     <td className="px-4 py-3 font-mono text-xs text-dark-500">{p.sku}</td>
-                    <td className="px-4 py-3 text-dark-500 capitalize">{p.category}</td>
-                    <td className="px-4 py-3 font-semibold text-dark-900">${p.price?.toFixed(2)}</td>
+                    <td className="px-4 py-3 text-dark-500">{p.category?.name || '—'}</td>
+                    <td className="px-4 py-3 font-semibold text-dark-900">${parseFloat(p.basePrice || 0).toFixed(2)}</td>
                     <td className="px-4 py-3">
-                      <span className={p.stock > 5 ? 'text-brand-600' : p.stock > 0 ? 'text-amber-600' : 'text-red-500'}>{p.stock}</span>
+                      {(() => {
+                        const stock = (p.variants || []).reduce((s, v) => s + (v.inventory || 0), 0);
+                        return <span className={stock > 5 ? 'text-brand-600' : stock > 0 ? 'text-amber-600' : 'text-red-500'}>{stock}</span>;
+                      })()}
                     </td>
                     <td className="px-4 py-3">
                       <span className={`badge text-xs ${p.isActive !== false ? 'badge-green' : 'badge-gray'}`}>{p.isActive !== false ? 'Active' : 'Draft'}</span>

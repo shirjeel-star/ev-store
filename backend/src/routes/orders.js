@@ -32,11 +32,7 @@ router.get('/', authenticate, async (req, res, next) => {
       prisma.order.count({ where }),
     ]);
 
-    res.json({
-      success: true,
-      data: orders,
-      pagination: { page: parseInt(page), limit: parseInt(limit), total },
-    });
+    res.json({ success: true, orders, total });
   } catch (err) {
     next(err);
   }

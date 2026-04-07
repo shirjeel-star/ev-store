@@ -13,7 +13,7 @@ router.get('/', async (req, res, next) => {
       }),
       prisma.blogPost.count({ where: { status } }),
     ]);
-    res.json({ success: true, data: posts, pagination: { page: parseInt(page), limit: parseInt(limit), total } });
+    res.json({ success: true, posts, total });
   } catch (err) { next(err); }
 });
 
@@ -21,7 +21,7 @@ router.get('/:slug', async (req, res, next) => {
   try {
     const post = await prisma.blogPost.findUnique({ where: { slug: req.params.slug } });
     if (!post || post.status !== 'PUBLISHED') return res.status(404).json({ success: false, message: 'Post not found' });
-    res.json({ success: true, data: post });
+    res.json({ success: true, post });
   } catch (err) { next(err); }
 });
 
