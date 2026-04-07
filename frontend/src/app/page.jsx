@@ -106,7 +106,7 @@ function FeaturesBar() {
 function FeaturedProducts() {
   const { data, isLoading } = useQuery({
     queryKey: ['products', 'featured'],
-    queryFn: () => productsApi.list({ limit: 4, sort: 'featured' }),
+    queryFn: () => productsApi.list({ limit: 4, featured: 'true' }),
   });
 
   const products = data?.data?.products || [];

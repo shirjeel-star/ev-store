@@ -12,16 +12,16 @@ import clsx from 'clsx';
 export default function ProductCard({ product }) {
   const [isWishlisted, setIsWishlisted] = useState(false);
   const [adding, setAdding] = useState(false);
+  const [imgSrc, setImgSrc] = useState(product.images?.[0]?.url || '/placeholder.jpg');
+  const [hoverSrc, setHoverSrc] = useState(product.images?.[1]?.url || product.images?.[0]?.url || '/placeholder.jpg');
   const addItem = useCartStore((s) => s.addItem);
   const openCart = useUIStore((s) => s.openCart);
 
-  const primaryImage = product.images?.[0]?.url || '/placeholder.jpg';
-  const hoverImage = product.images?.[1]?.url || primaryImage;
   const defaultVariant = product.variants?.[0];
-  const price = parseFloat(defaultVariant?.price || product.price || 0);
-  const comparePrice = parseFloat(defaultVariant?.comparePrice || product.comparePrice || 0);
+  const price = parseFloat(defaultVariant?.price || product.price || product.basePrice || 0);
+  const comparePrice = parseFloat(defaultVariant?.comparePrice || defaultVariant?.compareAtPrice || product.comparePrice || product.compareAtPrice || 0);
   const salePercent = comparePrice > price ? Math.round(((comparePrice - price) / comparePrice) * 100) : 0;
-  const inStock = product.variants?.some((v) => v.stock > 0) ?? true;
+  const inStock = product.variants?.some((v) => (v.stock ?? v.inventory ?? 0) > 0) ?? true;
 
   const handleAddToCart = async (e) => {
     e.preventDefault();
@@ -43,18 +43,20 @@ export default function ProductCard({ product }) {
       {/* Image */}
       <Link href={`/shop/${product.slug}`} className="block relative aspect-square overflow-hidden bg-dark-50">
         <Image
-          src={primaryImage}
+          src={imgSrc}
           alt={product.name}
           fill
           className="object-cover group-hover:opacity-0 transition-opacity duration-300"
           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+          onError={() => setImgSrc('/placeholder.jpg')}
         />
         <Image
-          src={hoverImage}
+          src={hoverSrc}
           alt={product.name}
           fill
           className="object-cover opacity-0 group-hover:opacity-100 transition-opacity duration-300"
           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+          onError={() => setHoverSrc('/placeholder.jpg')}
         />
         {/* Badges */}
         <div className="absolute top-3 left-3 flex flex-col gap-1.5">

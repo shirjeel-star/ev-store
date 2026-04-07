@@ -18,6 +18,18 @@ const nextConfig = {
         protocol: 'https',
         hostname: '**.topdon.us',
       },
+      {
+        protocol: 'https',
+        hostname: 'www.topdon.us',
+      },
+      {
+        protocol: 'https',
+        hostname: 'topdon.com',
+      },
+      {
+        protocol: 'https',
+        hostname: '**.topdon.com',
+      },
     ],
   },
   async rewrites() {

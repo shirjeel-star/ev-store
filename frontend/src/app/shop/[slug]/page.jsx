@@ -135,6 +135,7 @@ export default function ProductDetailPage() {
                 className="object-cover"
                 priority
                 sizes="(max-width: 768px) 100vw, 50vw"
+                onError={(e) => { e.currentTarget.src = '/placeholder.jpg'; }}
               />
               {salePercent > 0 && (
                 <div className="absolute top-4 left-4">
@@ -153,7 +154,7 @@ export default function ProductDetailPage() {
                       i === displayImageIndex ? 'border-brand-500' : 'border-transparent hover:border-dark-200'
                     )}
                   >
-                    <Image src={img.url} alt="" fill className="object-cover" sizes="80px" />
+                    <Image src={img.url || '/placeholder.jpg'} alt="" fill className="object-cover" sizes="80px" onError={(e) => { e.currentTarget.src = '/placeholder.jpg'; }} />
                   </button>
                 ))}
               </div>
