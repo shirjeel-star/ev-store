@@ -2,7 +2,8 @@
 
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
-import { CheckCircle, Package, ArrowRight, Home, Suspense } from 'lucide-react';
+import { Suspense } from 'react';
+import { CheckCircle, Package, ArrowRight, Home } from 'lucide-react';
 
 function SuccessContent() {
   const searchParams = useSearchParams();

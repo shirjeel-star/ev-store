@@ -1,7 +1,7 @@
 {
   "name": "voltstore-backend",
   "version": "1.0.0",
-  "description": "VoltStore EV Ecommerce Platform — Backend API",
+  "description": "VoltStore EV Ecommerce Platform \u2014 Backend API",
   "main": "src/index.js",
   "scripts": {
     "dev": "nodemon src/index.js",
@@ -44,5 +44,9 @@
   },
   "engines": {
     "node": ">=18.0.0"
+  },
+  "overrides": {
+    "multer-storage-cloudinary": "4.0.0",
+    "cloudinary": "2.9.0"
   }
 }

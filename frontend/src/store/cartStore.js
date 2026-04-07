@@ -140,3 +140,4 @@ const useCartStore = create(
 );
 
 export default useCartStore;
+export { useCartStore };

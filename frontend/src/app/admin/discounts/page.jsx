@@ -13,7 +13,7 @@ const schema = z.object({
   code: z.string().min(3).max(30).regex(/^[A-Z0-9_-]+$/, 'Uppercase, numbers, dashes only'),
   type: z.enum(['PERCENTAGE', 'FIXED']),
   value: z.number({ coercion: true }).positive(),
-  minOrderAmount: z.number({ coercion: true }).nonneg().optional(),
+  minOrderAmount: z.number({ coercion: true }).min(0).optional(),
   maxUses: z.number({ coercion: true }).int().positive().optional(),
   expiresAt: z.string().optional(),
   active: z.boolean().optional(),
