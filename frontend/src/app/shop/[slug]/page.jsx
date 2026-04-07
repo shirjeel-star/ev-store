@@ -150,7 +150,7 @@ export default function ProductDetailPage() {
                     onClick={() => setActiveImage(i)}
                     className={clsx(
                       'relative aspect-square rounded-xl overflow-hidden border-2 transition-all',
-                      i === activeImage ? 'border-brand-500' : 'border-transparent hover:border-dark-200'
+                      i === displayImageIndex ? 'border-brand-500' : 'border-transparent hover:border-dark-200'
                     )}
                   >
                     <Image src={img.url} alt="" fill className="object-cover" sizes="80px" />
